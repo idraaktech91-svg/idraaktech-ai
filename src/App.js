@@ -46,12 +46,30 @@ function ProjectsList({ projects, openProject, addProject }) {
   );
 }
 
-function ProjectDetail({ project, goBack }) {
+function ProjectDetail({ project, goBack, updateProject }) {
+  const [text, setText] = useState(project.content || "");
+
+  const handleSave = () => {
+    updateProject(project.id, text);
+    alert("Saved ✅");
+  };
+
   return (
     <div>
       <button onClick={goBack}>⬅ Back</button>
+
       <h2>{project.name}</h2>
-      <p>Project ID: {project.id}</p>
+
+      <textarea
+        style={{ width: "100%", height: "200px" }}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Write your notes here..."
+      />
+
+      <br /><br />
+
+      <button onClick={handleSave}>💾 Save</button>
     </div>
   );
 }
@@ -82,6 +100,13 @@ export default function App() {
     setProjects([...projects, project]);
   };
 
+  const updateProject = (id, content) => {
+    const updated = projects.map((p) =>
+      p.id === id ? { ...p, content } : p
+    );
+    setProjects(updated);
+  };
+
   const openProject = (project) => {
     setSelectedProject(project);
     setPage("projectDetail");
@@ -106,7 +131,11 @@ export default function App() {
 
     if (page === "projectDetail" && selectedProject)
       return (
-        <ProjectDetail project={selectedProject} goBack={goBack} />
+        <ProjectDetail
+          project={selectedProject}
+          goBack={goBack}
+          updateProject={updateProject}
+        />
       );
 
     if (page === "ai") return <AITools />;
