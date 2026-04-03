@@ -4,17 +4,19 @@ function Dashboard() {
   return <h2>Dashboard</h2>;
 }
 
-function Projects({ projects, addProject }) {
+function ProjectsList({ projects, openProject, addProject }) {
   const [name, setName] = useState("");
 
   const handleAdd = () => {
     if (!name) return;
 
-    addProject({
+    const newProject = {
       id: Date.now(),
-      name: name
-    });
+      name: name,
+      content: ""
+    };
 
+    addProject(newProject);
     setName("");
   };
 
@@ -33,9 +35,23 @@ function Projects({ projects, addProject }) {
 
       <ul>
         {projects.map((p) => (
-          <li key={p.id}>{p.name}</li>
+          <li key={p.id}>
+            <button onClick={() => openProject(p)}>
+              {p.name}
+            </button>
+          </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function ProjectDetail({ project, goBack }) {
+  return (
+    <div>
+      <button onClick={goBack}>⬅ Back</button>
+      <h2>{project.name}</h2>
+      <p>Project ID: {project.id}</p>
     </div>
   );
 }
@@ -47,8 +63,9 @@ function AITools() {
 export default function App() {
   const [page, setPage] = useState("dashboard");
   const [projects, setProjects] = useState([]);
+  const [selectedProject, setSelectedProject] = useState(null);
 
-  // تحميل المشاريع من الجهاز
+  // تحميل المشاريع
   useEffect(() => {
     const saved = localStorage.getItem("projects");
     if (saved) {
@@ -56,7 +73,7 @@ export default function App() {
     }
   }, []);
 
-  // حفظ المشاريع في الجهاز
+  // حفظ المشاريع
   useEffect(() => {
     localStorage.setItem("projects", JSON.stringify(projects));
   }, [projects]);
@@ -65,9 +82,33 @@ export default function App() {
     setProjects([...projects, project]);
   };
 
+  const openProject = (project) => {
+    setSelectedProject(project);
+    setPage("projectDetail");
+  };
+
+  const goBack = () => {
+    setSelectedProject(null);
+    setPage("projects");
+  };
+
   const renderPage = () => {
     if (page === "dashboard") return <Dashboard />;
-    if (page === "projects") return <Projects projects={projects} addProject={addProject} />;
+
+    if (page === "projects")
+      return (
+        <ProjectsList
+          projects={projects}
+          addProject={addProject}
+          openProject={openProject}
+        />
+      );
+
+    if (page === "projectDetail" && selectedProject)
+      return (
+        <ProjectDetail project={selectedProject} goBack={goBack} />
+      );
+
     if (page === "ai") return <AITools />;
   };
 
