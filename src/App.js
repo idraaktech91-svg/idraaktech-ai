@@ -1,40 +1,45 @@
 import React, { useState } from "react";
 
-export default function App() {
-  const [lang, setLang] = useState("en");
+function Dashboard() {
+  return <h2>Dashboard</h2>;
+}
 
-  const translations = {
-    en: {
-      title: "IdraakTech AI",
-      dashboard: "Dashboard",
-      projects: "Projects"
-    },
-    ar: {
-      title: "إدراك تك AI",
-      dashboard: "لوحة التحكم",
-      projects: "المشاريع"
-    },
-    hi: {
-      title: "IdraakTech AI",
-      dashboard: "डैशबोर्ड",
-      projects: "प्रोजेक्ट्स"
-    }
+function Projects() {
+  return <h2>Projects</h2>;
+}
+
+function AITools() {
+  return <h2>AI Tools</h2>;
+}
+
+export default function App() {
+  const [page, setPage] = useState("dashboard");
+
+  const renderPage = () => {
+    if (page === "dashboard") return <Dashboard />;
+    if (page === "projects") return <Projects />;
+    if (page === "ai") return <AITools />;
   };
 
-  const t = translations[lang];
-
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>{t.title}</h1>
+    <div style={{ display: "flex", height: "100vh" }}>
+      
+      {/* Sidebar */}
+      <div style={{ width: "200px", background: "#111", color: "#fff", padding: "20px" }}>
+        <h3>IdraakTech AI</h3>
 
-      <button onClick={() => setLang("en")}>EN</button>
-      <button onClick={() => setLang("ar")}>AR</button>
-      <button onClick={() => setLang("hi")}>HI</button>
+        <button onClick={() => setPage("dashboard")}>Dashboard</button>
+        <br /><br />
+        <button onClick={() => setPage("projects")}>Projects</button>
+        <br /><br />
+        <button onClick={() => setPage("ai")}>AI Tools</button>
+      </div>
 
-      <hr />
+      {/* Main Content */}
+      <div style={{ flex: 1, padding: "20px" }}>
+        {renderPage()}
+      </div>
 
-      <h2>{t.dashboard}</h2>
-      <p>{t.projects}</p>
     </div>
   );
 }
