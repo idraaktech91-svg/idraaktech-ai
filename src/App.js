@@ -95,13 +95,44 @@ function ProjectDetail({ project, goBack, updateProject }) {
     <br /><br />
 
     <button
-      onClick={() => {
-        const result = "✨ AI Suggestion:\n\n" + text + "\n\n- Expanded idea\n- More details\n- Creative structure";
-        setText(result);
-      }}
-    >
-      🤖 Generate
-    </button>
+  onClick={() => {
+    const result =
+      "✨ AI Suggestion:\n\n" +
+      text +
+      "\n\n- Expanded idea\n- More details\n- Creative structure";
+
+    setText(result);
+  }}
+>
+  🤖 Generate
+</button>
+
+<br /><br />
+
+<button
+  onClick={() => {
+    updateProject(project.id, text);
+    alert("Added to Notes ✅");
+  }}
+>
+  ➕ Add to Notes
+</button>
+
+<br /><br />
+
+<button
+  onClick={() => {
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = project.name + ".txt";
+    a.click();
+  }}
+>
+  ⬇ Download
+</button>
   </div>
 )}
 
