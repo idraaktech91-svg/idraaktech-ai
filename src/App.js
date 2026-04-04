@@ -41,6 +41,7 @@ export default function App() {
   const [lang, setLang] = useState("en");
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const t = translations[lang];
 
@@ -53,19 +54,49 @@ export default function App() {
     { key: "contact", icon: <FaEnvelope />, label: t.contact },
   ];
 
-  const sendMessage = () => {
+  // ✅ إرسال رسالة إلى API
+  const sendMessage = async () => {
     if (!input.trim()) return;
 
-    const newMessages = [...messages, { role: "user", text: input }];
-
-    // رد تلقائي بسيط (محاكاة AI)
-    const aiReply = {
-      role: "ai",
-      text: "This is a simulated AI response 🤖"
-    };
-
-    setMessages([...newMessages, aiReply]);
+    const userMessage = { role: "user", text: input };
+    setMessages(prev => [...prev, userMessage]);
     setInput("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer YOUR_API_KEY_HERE"
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "system", content: "You are a helpful assistant." },
+            ...messages.map(m => ({
+              role: m.role === "user" ? "user" : "assistant",
+              content: m.text
+            })),
+            { role: "user", content: input }
+          ]
+        })
+      });
+
+      const data = await response.json();
+
+      const aiReply = {
+        role: "ai",
+        text: data.choices?.[0]?.message?.content || "No response"
+      };
+
+      setMessages(prev => [...prev, aiReply]);
+
+    } catch (error) {
+      setMessages(prev => [...prev, { role: "ai", text: "Error connecting to AI" }]);
+    }
+
+    setLoading(false);
   };
 
   const renderDashboard = () => (
@@ -87,8 +118,7 @@ export default function App() {
         background: "white",
         padding: "15px",
         borderRadius: "10px",
-        marginBottom: "10px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+        marginBottom: "10px"
       }}>
         {messages.map((msg, index) => (
           <div key={index} style={{
@@ -106,6 +136,8 @@ export default function App() {
             </span>
           </div>
         ))}
+
+        {loading && <p>Thinking...</p>}
       </div>
 
       {/* Input */}
@@ -116,9 +148,7 @@ export default function App() {
           placeholder={t.placeholder}
           style={{ flex: 1, padding: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
         />
-        <button onClick={sendMessage}>
-          {t.send}
-        </button>
+        <button onClick={sendMessage}>{t.send}</button>
       </div>
     </div>
   );
