@@ -179,7 +179,7 @@ export default function App() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>IDRAAK AI</h1>
+      <h1>Idraaktech-ai</h1>
 
       {page === "dashboard" && <Dashboard />}
 
