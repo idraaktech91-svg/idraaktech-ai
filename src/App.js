@@ -1,4 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+
+import Projects from "./pages/Projects";
+import AITools from "./pages/AITools";
+import About from "./pages/About";
+import Workshops from "./pages/Workshops";
+import Contact from "./pages/Contact";
 
 /* ================= TRANSLATIONS ================= */
 
@@ -26,7 +32,7 @@ const translations = {
     about: "کے بارے میں",
     workshops: "ورکشاپس",
     contact: "رابطہ",
-  }
+  },
 };
 
 /* ================= COMPONENT ================= */
@@ -37,9 +43,30 @@ export default function App() {
 
   const t = translations[lang];
 
+  const renderPage = () => {
+    switch (page) {
+      case "projects":
+        return <Projects t={t} />;
+      case "ai":
+        return <AITools t={t} />;
+      case "about":
+        return <About t={t} />;
+      case "workshops":
+        return <Workshops t={t} />;
+      case "contact":
+        return <Contact t={t} />;
+      default:
+        return (
+          <div>
+            <h2>{t.dashboard}</h2>
+            <p>Welcome to Idraaktech-ai platform.</p>
+          </div>
+        );
+    }
+  };
+
   return (
     <div style={{ padding: "20px" }}>
-
       <h1>Idraaktech-ai</h1>
 
       {/* Language Switcher */}
@@ -59,50 +86,8 @@ export default function App() {
         <button onClick={() => setPage("contact")}>{t.contact}</button>
       </div>
 
-      {/* Pages */}
-
-      {page === "dashboard" && (
-        <div>
-          <h2>{t.dashboard}</h2>
-          <p>Welcome to Idraaktech-ai platform.</p>
-        </div>
-      )}
-
-      {page === "projects" && (
-        <div>
-          <h2>{t.projects}</h2>
-          <p>Manage your projects here.</p>
-        </div>
-      )}
-
-      {page === "ai" && (
-        <div>
-          <h2>{t.ai}</h2>
-          <p>AI tools will be here.</p>
-        </div>
-      )}
-
-      {page === "about" && (
-        <div>
-          <h2>{t.about}</h2>
-          <p>About the platform and trainer.</p>
-        </div>
-      )}
-
-      {page === "workshops" && (
-        <div>
-          <h2>{t.workshops}</h2>
-          <p>Training workshops content.</p>
-        </div>
-      )}
-
-      {page === "contact" && (
-        <div>
-          <h2>{t.contact}</h2>
-          <p>Contact information.</p>
-        </div>
-      )}
-
+      {/* Content */}
+      {renderPage()}
     </div>
   );
 }
