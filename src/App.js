@@ -47,6 +47,7 @@ function ProjectsList({ projects, openProject, addProject }) {
 }
 
 function ProjectDetail({ project, goBack, updateProject }) {
+  const [tab, setTab] = useState("notes");
   const [text, setText] = useState(project.content || "");
 
   const handleSave = () => {
@@ -60,16 +61,31 @@ function ProjectDetail({ project, goBack, updateProject }) {
 
       <h2>{project.name}</h2>
 
-      <textarea
-        style={{ width: "100%", height: "200px" }}
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Write your notes here..."
-      />
+      {/* Tabs */}
+      <div style={{ marginBottom: "20px" }}>
+        <button onClick={() => setTab("notes")}>📝 Notes</button>
+        <button onClick={() => setTab("ai")}>🤖 AI Tools</button>
+      </div>
 
-      <br /><br />
+      {/* Notes */}
+      {tab === "notes" && (
+        <div>
+          <textarea
+            style={{ width: "100%", height: "200px" }}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          <br /><br />
+          <button onClick={handleSave}>💾 Save</button>
+        </div>
+      )}
 
-      <button onClick={handleSave}>💾 Save</button>
+      {/* AI Tools */}
+      {tab === "ai" && (
+        <div>
+          <h3>AI Tools Coming Soon...</h3>
+        </div>
+      )}
     </div>
   );
 }
@@ -83,7 +99,6 @@ export default function App() {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
 
-  // تحميل المشاريع
   useEffect(() => {
     const saved = localStorage.getItem("projects");
     if (saved) {
@@ -91,75 +106,8 @@ export default function App() {
     }
   }, []);
 
-  // حفظ المشاريع
   useEffect(() => {
     localStorage.setItem("projects", JSON.stringify(projects));
   }, [projects]);
 
-  const addProject = (project) => {
-    setProjects([...projects, project]);
-  };
-
-  const updateProject = (id, content) => {
-    const updated = projects.map((p) =>
-      p.id === id ? { ...p, content } : p
-    );
-    setProjects(updated);
-  };
-
-  const openProject = (project) => {
-    setSelectedProject(project);
-    setPage("projectDetail");
-  };
-
-  const goBack = () => {
-    setSelectedProject(null);
-    setPage("projects");
-  };
-
-  const renderPage = () => {
-    if (page === "dashboard") return <Dashboard />;
-
-    if (page === "projects")
-      return (
-        <ProjectsList
-          projects={projects}
-          addProject={addProject}
-          openProject={openProject}
-        />
-      );
-
-    if (page === "projectDetail" && selectedProject)
-      return (
-        <ProjectDetail
-          project={selectedProject}
-          goBack={goBack}
-          updateProject={updateProject}
-        />
-      );
-
-    if (page === "ai") return <AITools />;
-  };
-
-  return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      
-      {/* Sidebar */}
-      <div style={{ width: "200px", background: "#111", color: "#fff", padding: "20px" }}>
-        <h3>IdraakTech AI</h3>
-
-        <button onClick={() => setPage("dashboard")}>Dashboard</button>
-        <br /><br />
-        <button onClick={() => setPage("projects")}>Projects</button>
-        <br /><br />
-        <button onClick={() => setPage("ai")}>AI Tools</button>
-      </div>
-
-      {/* Main Content */}
-      <div style={{ flex: 1, padding: "20px" }}>
-        {renderPage()}
-      </div>
-
-    </div>
-  );
-}
+  const addProject = (project)
