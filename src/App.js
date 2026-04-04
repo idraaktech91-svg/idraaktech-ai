@@ -61,13 +61,11 @@ function ProjectDetail({ project, goBack, updateProject }) {
 
       <h2>{project.name}</h2>
 
-      {/* Tabs */}
       <div style={{ marginBottom: "20px" }}>
         <button onClick={() => setTab("notes")}>📝 Notes</button>
         <button onClick={() => setTab("ai")}>🤖 AI Tools</button>
       </div>
 
-      {/* Notes */}
       {tab === "notes" && (
         <div>
           <textarea
@@ -80,61 +78,63 @@ function ProjectDetail({ project, goBack, updateProject }) {
         </div>
       )}
 
-      {/* AI Tools */}
-{tab === "ai" && (
-  <div>
-    <h3>AI Generator</h3>
+      {tab === "ai" && (
+        <div>
+          <h3>AI Generator</h3>
 
-    <textarea
-      placeholder="Write your idea here..."
-      style={{ width: "100%", height: "100px" }}
-      value={text}
-      onChange={(e) => setText(e.target.value)}
-    />
+          <textarea
+            placeholder="Write your idea here..."
+            style={{ width: "100%", height: "100px" }}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
 
-    <br /><br />
+          <br /><br />
 
-    <button
-  onClick={() => {
-    const result =
-      "✨ AI Suggestion:\n\n" +
-      text +
-      "\n\n- Expanded idea\n- More details\n- Creative structure";
+          <button
+            onClick={() => {
+              const result =
+                "✨ AI Suggestion:\n\n" +
+                text +
+                "\n\n- Expanded idea\n- More details\n- Creative structure";
 
-    setText(result);
-  }}
->
-  🤖 Generate
-</button>
+              setText(result);
+            }}
+          >
+            🤖 Generate
+          </button>
 
-<br /><br />
+          <br /><br />
 
-<button
-  onClick={() => {
-    updateProject(project.id, text);
-    alert("Added to Notes ✅");
-  }}
->
-  ➕ Add to Notes
-</button>
+          <button
+            onClick={() => {
+              updateProject(project.id, text);
+              alert("Added to Notes ✅");
+            }}
+          >
+            ➕ Add to Notes
+          </button>
 
-<br /><br />
+          <br /><br />
 
-<button
-  onClick={() => {
-    const blob = new Blob([text], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
+          <button
+            onClick={() => {
+              const blob = new Blob([text], { type: "text/plain" });
+              const url = URL.createObjectURL(blob);
 
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = project.name + ".txt";
-    a.click();
-  }}
->
-  ⬇ Download
-</button>
-  </div>
-)}
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = project.name + ".txt";
+              a.click();
+            }}
+          >
+            ⬇ Download
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function AITools() {
   return <h2>AI Tools</h2>;
@@ -156,4 +156,50 @@ export default function App() {
     localStorage.setItem("projects", JSON.stringify(projects));
   }, [projects]);
 
-  const addProject = (project)
+  const addProject = (project) => {
+    setProjects([...projects, project]);
+  };
+
+  const updateProject = (id, content) => {
+    const updated = projects.map((p) =>
+      p.id === id ? { ...p, content } : p
+    );
+    setProjects(updated);
+  };
+
+  const openProject = (project) => {
+    setSelectedProject(project);
+    setPage("project");
+  };
+
+  const goBack = () => {
+    setSelectedProject(null);
+    setPage("dashboard");
+  };
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <h1>IDRAAK AI</h1>
+
+      {page === "dashboard" && <Dashboard />}
+
+      {page === "dashboard" && (
+        <ProjectsList
+          projects={projects}
+          addProject={addProject}
+          openProject={openProject}
+        />
+      )}
+
+      {page === "project" && selectedProject && (
+        <ProjectDetail
+          project={selectedProject}
+          goBack={goBack}
+          updateProject={updateProject}
+        />
+      )}
+
+      {page === "ai" && <AITools />}
+    </div>
+  );
+}
