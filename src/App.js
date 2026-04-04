@@ -11,9 +11,8 @@ const translations = {
     about: "About",
     workshops: "Workshops",
     contact: "Contact",
-    welcome: "Welcome",
-    stats: "Platform Statistics",
-    myProjects: "My Projects",
+    send: "Send",
+    placeholder: "Type a message...",
   },
   ar: {
     dashboard: "الرئيسية",
@@ -22,9 +21,8 @@ const translations = {
     about: "حول",
     workshops: "الورش",
     contact: "تواصل",
-    welcome: "مرحباً",
-    stats: "إحصائيات المنصة",
-    myProjects: "مشاريعي",
+    send: "إرسال",
+    placeholder: "اكتب رسالة...",
   },
   ur: {
     dashboard: "ڈیش بورڈ",
@@ -33,15 +31,16 @@ const translations = {
     about: "کے بارے میں",
     workshops: "ورکشاپس",
     contact: "رابطہ",
-    welcome: "خوش آمدید",
-    stats: "پلیٹ فارم کے اعداد و شمار",
-    myProjects: "میرے پروجیکٹس",
+    send: "بھیجیں",
+    placeholder: "پیغام لکھیں...",
   }
 };
 
 export default function App() {
   const [page, setPage] = useState("dashboard");
   const [lang, setLang] = useState("en");
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
 
   const t = translations[lang];
 
@@ -54,47 +53,72 @@ export default function App() {
     { key: "contact", icon: <FaEnvelope />, label: t.contact },
   ];
 
-  const projectsData = [
-    { title: "AI Chatbot", desc: "Smart chatbot using AI", status: "Active" },
-    { title: "E-learning Platform", desc: "Online courses system", status: "Completed" },
-    { title: "AI Image Generator", desc: "Generate images using AI", status: "In Progress" },
-    { title: "Automation Tool", desc: "Task automation system", status: "Active" },
-  ];
+  const sendMessage = () => {
+    if (!input.trim()) return;
+
+    const newMessages = [...messages, { role: "user", text: input }];
+
+    // رد تلقائي بسيط (محاكاة AI)
+    const aiReply = {
+      role: "ai",
+      text: "This is a simulated AI response 🤖"
+    };
+
+    setMessages([...newMessages, aiReply]);
+    setInput("");
+  };
 
   const renderDashboard = () => (
-    <div>
-      <h2>{t.welcome} 👋</h2>
-      <p>{t.stats}</p>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "15px", marginTop: "20px" }}>
-        <div style={cardStyle}><h3>Projects</h3><p>12</p></div>
-        <div style={cardStyle}><h3>AI Tools</h3><p>5</p></div>
-        <div style={cardStyle}><h3>Workshops</h3><p>8</p></div>
-        <div style={cardStyle}><h3>Users</h3><p>120+</p></div>
-      </div>
-    </div>
+    <h2>Dashboard</h2>
   );
 
   const renderProjects = () => (
-    <div>
-      <h2>{t.myProjects}</h2>
+    <h2>Projects</h2>
+  );
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "15px", marginTop: "20px" }}>
-        {projectsData.map((project, index) => (
-          <div key={index} style={cardStyle}>
-            <h3>{project.title}</h3>
-            <p>{project.desc}</p>
+  const renderAI = () => (
+    <div>
+      <h2>{t.ai}</h2>
+
+      {/* Chat Box */}
+      <div style={{
+        height: "400px",
+        overflowY: "auto",
+        background: "white",
+        padding: "15px",
+        borderRadius: "10px",
+        marginBottom: "10px",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+      }}>
+        {messages.map((msg, index) => (
+          <div key={index} style={{
+            textAlign: msg.role === "user" ? "right" : "left",
+            marginBottom: "10px"
+          }}>
             <span style={{
-              padding: "5px 10px",
-              borderRadius: "5px",
-              background: "#2563eb",
-              color: "white",
-              fontSize: "12px"
+              display: "inline-block",
+              padding: "10px",
+              borderRadius: "10px",
+              background: msg.role === "user" ? "#2563eb" : "#e5e7eb",
+              color: msg.role === "user" ? "white" : "black"
             }}>
-              {project.status}
+              {msg.text}
             </span>
           </div>
         ))}
+      </div>
+
+      {/* Input */}
+      <div style={{ display: "flex", gap: "10px" }}>
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder={t.placeholder}
+          style={{ flex: 1, padding: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
+        />
+        <button onClick={sendMessage}>
+          {t.send}
+        </button>
       </div>
     </div>
   );
@@ -102,13 +126,9 @@ export default function App() {
   const renderPage = () => {
     if (page === "dashboard") return renderDashboard();
     if (page === "projects") return renderProjects();
+    if (page === "ai") return renderAI();
 
-    return (
-      <div style={{ background: "#1e1e2f", padding: "20px", borderRadius: "10px", color: "white" }}>
-        <h2>{t[page]}</h2>
-        <p>This is the {t[page]} page.</p>
-      </div>
-    );
+    return <h2>{t[page]}</h2>;
   };
 
   return (
@@ -160,12 +180,3 @@ export default function App() {
     </div>
   );
 }
-
-/* ================= CARD STYLE ================= */
-
-const cardStyle = {
-  background: "white",
-  padding: "20px",
-  borderRadius: "10px",
-  boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
-};
