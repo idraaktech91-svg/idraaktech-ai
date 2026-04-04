@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-
-import Projects from "./pages/Projects";
-import AITools from "./pages/AITools";
-import About from "./pages/About";
-import Workshops from "./pages/Workshops";
-import Contact from "./pages/Contact";
+import { FaHome, FaProjectDiagram, FaRobot, FaInfoCircle, FaChalkboardTeacher, FaEnvelope } from "react-icons/fa";
 
 /* ================= TRANSLATIONS ================= */
 
@@ -32,7 +27,7 @@ const translations = {
     about: "کے بارے میں",
     workshops: "ورکشاپس",
     contact: "رابطہ",
-  },
+  }
 };
 
 /* ================= COMPONENT ================= */
@@ -46,15 +41,40 @@ export default function App() {
   const renderPage = () => {
     switch (page) {
       case "projects":
-        return <Projects t={t} />;
+        return (
+          <div>
+            <h2>{t.projects}</h2>
+            <p>Manage your projects here.</p>
+          </div>
+        );
       case "ai":
-        return <AITools t={t} />;
+        return (
+          <div>
+            <h2>{t.ai}</h2>
+            <p>AI tools will be here.</p>
+          </div>
+        );
       case "about":
-        return <About t={t} />;
+        return (
+          <div>
+            <h2>{t.about}</h2>
+            <p>About the platform and trainer.</p>
+          </div>
+        );
       case "workshops":
-        return <Workshops t={t} />;
+        return (
+          <div>
+            <h2>{t.workshops}</h2>
+            <p>Training workshops content.</p>
+          </div>
+        );
       case "contact":
-        return <Contact t={t} />;
+        return (
+          <div>
+            <h2>{t.contact}</h2>
+            <p>Contact information.</p>
+          </div>
+        );
       default:
         return (
           <div>
@@ -66,7 +86,8 @@ export default function App() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+      
       <h1>Idraaktech-ai</h1>
 
       {/* Language Switcher */}
@@ -78,16 +99,42 @@ export default function App() {
 
       {/* Navbar */}
       <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: "wrap" }}>
-        <button onClick={() => setPage("dashboard")}>{t.dashboard}</button>
-        <button onClick={() => setPage("projects")}>{t.projects}</button>
-        <button onClick={() => setPage("ai")}>{t.ai}</button>
-        <button onClick={() => setPage("about")}>{t.about}</button>
-        <button onClick={() => setPage("workshops")}>{t.workshops}</button>
-        <button onClick={() => setPage("contact")}>{t.contact}</button>
+
+        <button onClick={() => setPage("dashboard")}>
+          <FaHome style={{ marginRight: "5px" }} />
+          {t.dashboard}
+        </button>
+
+        <button onClick={() => setPage("projects")}>
+          <FaProjectDiagram style={{ marginRight: "5px" }} />
+          {t.projects}
+        </button>
+
+        <button onClick={() => setPage("ai")}>
+          <FaRobot style={{ marginRight: "5px" }} />
+          {t.ai}
+        </button>
+
+        <button onClick={() => setPage("about")}>
+          <FaInfoCircle style={{ marginRight: "5px" }} />
+          {t.about}
+        </button>
+
+        <button onClick={() => setPage("workshops")}>
+          <FaChalkboardTeacher style={{ marginRight: "5px" }} />
+          {t.workshops}
+        </button>
+
+        <button onClick={() => setPage("contact")}>
+          <FaEnvelope style={{ marginRight: "5px" }} />
+          {t.contact}
+        </button>
+
       </div>
 
       {/* Content */}
       {renderPage()}
+
     </div>
   );
 }
