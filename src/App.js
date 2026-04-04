@@ -1,205 +1,108 @@
 import React, { useState, useEffect } from "react";
 
-function Dashboard() {
-  return <h2>Dashboard</h2>;
-}
+/* ================= TRANSLATIONS ================= */
 
-function ProjectsList({ projects, openProject, addProject }) {
-  const [name, setName] = useState("");
+const translations = {
+  en: {
+    dashboard: "Dashboard",
+    projects: "Projects",
+    ai: "AI Tools",
+    about: "About",
+    workshops: "Workshops",
+    contact: "Contact",
+  },
+  ar: {
+    dashboard: "الرئيسية",
+    projects: "المشاريع",
+    ai: "أدوات الذكاء الاصطناعي",
+    about: "حول",
+    workshops: "الورش",
+    contact: "تواصل",
+  },
+  ur: {
+    dashboard: "ڈیش بورڈ",
+    projects: "پروجیکٹس",
+    ai: "AI ٹولز",
+    about: "کے بارے میں",
+    workshops: "ورکشاپس",
+    contact: "رابطہ",
+  }
+};
 
-  const handleAdd = () => {
-    if (!name) return;
-
-    const newProject = {
-      id: Date.now(),
-      name: name,
-      content: ""
-    };
-
-    addProject(newProject);
-    setName("");
-  };
-
-  return (
-    <div>
-      <h2>Projects</h2>
-
-      <input
-        type="text"
-        placeholder="Project name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-
-      <button onClick={handleAdd}>Create</button>
-
-      <ul>
-        {projects.map((p) => (
-          <li key={p.id}>
-            <button onClick={() => openProject(p)}>
-              {p.name}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function ProjectDetail({ project, goBack, updateProject }) {
-  const [tab, setTab] = useState("notes");
-  const [text, setText] = useState(project.content || "");
-
-  const handleSave = () => {
-    updateProject(project.id, text);
-    alert("Saved ✅");
-  };
-
-  return (
-    <div>
-      <button onClick={goBack}>⬅ Back</button>
-
-      <h2>{project.name}</h2>
-
-      <div style={{ marginBottom: "20px" }}>
-        <button onClick={() => setTab("notes")}>📝 Notes</button>
-        <button onClick={() => setTab("ai")}>🤖 AI Tools</button>
-      </div>
-
-      {tab === "notes" && (
-        <div>
-          <textarea
-            style={{ width: "100%", height: "200px" }}
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
-          <br /><br />
-          <button onClick={handleSave}>💾 Save</button>
-        </div>
-      )}
-
-      {tab === "ai" && (
-        <div>
-          <h3>AI Generator</h3>
-
-          <textarea
-            placeholder="Write your idea here..."
-            style={{ width: "100%", height: "100px" }}
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
-
-          <br /><br />
-
-          <button
-            onClick={() => {
-              const result =
-                "✨ AI Suggestion:\n\n" +
-                text +
-                "\n\n- Expanded idea\n- More details\n- Creative structure";
-
-              setText(result);
-            }}
-          >
-            🤖 Generate
-          </button>
-
-          <br /><br />
-
-          <button
-            onClick={() => {
-              updateProject(project.id, text);
-              alert("Added to Notes ✅");
-            }}
-          >
-            ➕ Add to Notes
-          </button>
-
-          <br /><br />
-
-          <button
-            onClick={() => {
-              const blob = new Blob([text], { type: "text/plain" });
-              const url = URL.createObjectURL(blob);
-
-              const a = document.createElement("a");
-              a.href = url;
-              a.download = project.name + ".txt";
-              a.click();
-            }}
-          >
-            ⬇ Download
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function AITools() {
-  return <h2>AI Tools</h2>;
-}
+/* ================= COMPONENT ================= */
 
 export default function App() {
   const [page, setPage] = useState("dashboard");
-  const [projects, setProjects] = useState([]);
-  const [selectedProject, setSelectedProject] = useState(null);
+  const [lang, setLang] = useState("en");
 
-  useEffect(() => {
-    const saved = localStorage.getItem("projects");
-    if (saved) {
-      setProjects(JSON.parse(saved));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("projects", JSON.stringify(projects));
-  }, [projects]);
-
-  const addProject = (project) => {
-    setProjects([...projects, project]);
-  };
-
-  const updateProject = (id, content) => {
-    const updated = projects.map((p) =>
-      p.id === id ? { ...p, content } : p
-    );
-    setProjects(updated);
-  };
-
-  const openProject = (project) => {
-    setSelectedProject(project);
-    setPage("project");
-  };
-
-  const goBack = () => {
-    setSelectedProject(null);
-    setPage("dashboard");
-  };
+  const t = translations[lang];
 
   return (
     <div style={{ padding: "20px" }}>
+
       <h1>Idraaktech-ai</h1>
 
-      {page === "dashboard" && <Dashboard />}
+      {/* Language Switcher */}
+      <div style={{ marginBottom: "15px" }}>
+        <button onClick={() => setLang("en")}>EN</button>
+        <button onClick={() => setLang("ar")}>AR</button>
+        <button onClick={() => setLang("ur")}>UR</button>
+      </div>
+
+      {/* Navbar */}
+      <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: "wrap" }}>
+        <button onClick={() => setPage("dashboard")}>{t.dashboard}</button>
+        <button onClick={() => setPage("projects")}>{t.projects}</button>
+        <button onClick={() => setPage("ai")}>{t.ai}</button>
+        <button onClick={() => setPage("about")}>{t.about}</button>
+        <button onClick={() => setPage("workshops")}>{t.workshops}</button>
+        <button onClick={() => setPage("contact")}>{t.contact}</button>
+      </div>
+
+      {/* Pages */}
 
       {page === "dashboard" && (
-        <ProjectsList
-          projects={projects}
-          addProject={addProject}
-          openProject={openProject}
-        />
+        <div>
+          <h2>{t.dashboard}</h2>
+          <p>Welcome to Idraaktech-ai platform.</p>
+        </div>
       )}
 
-      {page === "project" && selectedProject && (
-        <ProjectDetail
-          project={selectedProject}
-          goBack={goBack}
-          updateProject={updateProject}
-        />
+      {page === "projects" && (
+        <div>
+          <h2>{t.projects}</h2>
+          <p>Manage your projects here.</p>
+        </div>
       )}
 
-      {page === "ai" && <AITools />}
+      {page === "ai" && (
+        <div>
+          <h2>{t.ai}</h2>
+          <p>AI tools will be here.</p>
+        </div>
+      )}
+
+      {page === "about" && (
+        <div>
+          <h2>{t.about}</h2>
+          <p>About the platform and trainer.</p>
+        </div>
+      )}
+
+      {page === "workshops" && (
+        <div>
+          <h2>{t.workshops}</h2>
+          <p>Training workshops content.</p>
+        </div>
+      )}
+
+      {page === "contact" && (
+        <div>
+          <h2>{t.contact}</h2>
+          <p>Contact information.</p>
+        </div>
+      )}
+
     </div>
   );
 }
