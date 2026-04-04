@@ -81,14 +81,29 @@ function ProjectDetail({ project, goBack, updateProject }) {
       )}
 
       {/* AI Tools */}
-      {tab === "ai" && (
-        <div>
-          <h3>AI Tools Coming Soon...</h3>
-        </div>
-      )}
-    </div>
-  );
-}
+{tab === "ai" && (
+  <div>
+    <h3>AI Generator</h3>
+
+    <textarea
+      placeholder="Write your idea here..."
+      style={{ width: "100%", height: "100px" }}
+      value={text}
+      onChange={(e) => setText(e.target.value)}
+    />
+
+    <br /><br />
+
+    <button
+      onClick={() => {
+        const result = "✨ AI Suggestion:\n\n" + text + "\n\n- Expanded idea\n- More details\n- Creative structure";
+        setText(result);
+      }}
+    >
+      🤖 Generate
+    </button>
+  </div>
+)}
 
 function AITools() {
   return <h2>AI Tools</h2>;
