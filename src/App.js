@@ -11,6 +11,8 @@ const translations = {
     about: "About",
     workshops: "Workshops",
     contact: "Contact",
+    welcome: "Welcome",
+    stats: "Platform Statistics",
   },
   ar: {
     dashboard: "الرئيسية",
@@ -19,6 +21,8 @@ const translations = {
     about: "حول",
     workshops: "الورش",
     contact: "تواصل",
+    welcome: "مرحباً",
+    stats: "إحصائيات المنصة",
   },
   ur: {
     dashboard: "ڈیش بورڈ",
@@ -27,6 +31,8 @@ const translations = {
     about: "کے بارے میں",
     workshops: "ورکشاپس",
     contact: "رابطہ",
+    welcome: "خوش آمدید",
+    stats: "پلیٹ فارم کے اعداد و شمار",
   }
 };
 
@@ -36,15 +42,6 @@ export default function App() {
 
   const t = translations[lang];
 
-  const renderPage = () => {
-    return (
-      <div style={{ background: "#1e1e2f", padding: "20px", borderRadius: "10px", color: "white" }}>
-        <h2>{t[page] || t.dashboard}</h2>
-        <p>Welcome to {t[page] || t.dashboard} section.</p>
-      </div>
-    );
-  };
-
   const menu = [
     { key: "dashboard", icon: <FaHome />, label: t.dashboard },
     { key: "projects", icon: <FaProjectDiagram />, label: t.projects },
@@ -53,6 +50,49 @@ export default function App() {
     { key: "workshops", icon: <FaChalkboardTeacher />, label: t.workshops },
     { key: "contact", icon: <FaEnvelope />, label: t.contact },
   ];
+
+  const renderDashboard = () => (
+    <div>
+      <h2>{t.welcome} 👋</h2>
+      <p>{t.stats}</p>
+
+      {/* Cards */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "15px", marginTop: "20px" }}>
+        
+        <div style={cardStyle}>
+          <h3>Projects</h3>
+          <p>12</p>
+        </div>
+
+        <div style={cardStyle}>
+          <h3>AI Tools</h3>
+          <p>5</p>
+        </div>
+
+        <div style={cardStyle}>
+          <h3>Workshops</h3>
+          <p>8</p>
+        </div>
+
+        <div style={cardStyle}>
+          <h3>Users</h3>
+          <p>120+</p>
+        </div>
+
+      </div>
+    </div>
+  );
+
+  const renderPage = () => {
+    if (page === "dashboard") return renderDashboard();
+
+    return (
+      <div style={{ background: "#1e1e2f", padding: "20px", borderRadius: "10px", color: "white" }}>
+        <h2>{t[page]}</h2>
+        <p>This is the {t[page]} page.</p>
+      </div>
+    );
+  };
 
   return (
     <div style={{ display: "flex", height: "100vh", fontFamily: "Arial" }}>
@@ -104,3 +144,13 @@ export default function App() {
     </div>
   );
 }
+
+/* ================= CARD STYLE ================= */
+
+const cardStyle = {
+  background: "white",
+  padding: "20px",
+  borderRadius: "10px",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+  textAlign: "center"
+};
