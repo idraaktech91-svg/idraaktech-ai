@@ -30,8 +30,6 @@ const translations = {
   }
 };
 
-/* ================= COMPONENT ================= */
-
 export default function App() {
   const [page, setPage] = useState("dashboard");
   const [lang, setLang] = useState("en");
@@ -39,101 +37,69 @@ export default function App() {
   const t = translations[lang];
 
   const renderPage = () => {
-    switch (page) {
-      case "projects":
-        return (
-          <div>
-            <h2>{t.projects}</h2>
-            <p>Manage your projects here.</p>
-          </div>
-        );
-      case "ai":
-        return (
-          <div>
-            <h2>{t.ai}</h2>
-            <p>AI tools will be here.</p>
-          </div>
-        );
-      case "about":
-        return (
-          <div>
-            <h2>{t.about}</h2>
-            <p>About the platform and trainer.</p>
-          </div>
-        );
-      case "workshops":
-        return (
-          <div>
-            <h2>{t.workshops}</h2>
-            <p>Training workshops content.</p>
-          </div>
-        );
-      case "contact":
-        return (
-          <div>
-            <h2>{t.contact}</h2>
-            <p>Contact information.</p>
-          </div>
-        );
-      default:
-        return (
-          <div>
-            <h2>{t.dashboard}</h2>
-            <p>Welcome to Idraaktech-ai platform.</p>
-          </div>
-        );
-    }
+    return (
+      <div style={{ background: "#1e1e2f", padding: "20px", borderRadius: "10px", color: "white" }}>
+        <h2>{t[page] || t.dashboard}</h2>
+        <p>Welcome to {t[page] || t.dashboard} section.</p>
+      </div>
+    );
   };
 
+  const menu = [
+    { key: "dashboard", icon: <FaHome />, label: t.dashboard },
+    { key: "projects", icon: <FaProjectDiagram />, label: t.projects },
+    { key: "ai", icon: <FaRobot />, label: t.ai },
+    { key: "about", icon: <FaInfoCircle />, label: t.about },
+    { key: "workshops", icon: <FaChalkboardTeacher />, label: t.workshops },
+    { key: "contact", icon: <FaEnvelope />, label: t.contact },
+  ];
+
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      
-      <h1>Idraaktech-ai</h1>
+    <div style={{ display: "flex", height: "100vh", fontFamily: "Arial" }}>
 
-      {/* Language Switcher */}
-      <div style={{ marginBottom: "15px" }}>
-        <button onClick={() => setLang("en")}>EN</button>
-        <button onClick={() => setLang("ar")}>AR</button>
-        <button onClick={() => setLang("ur")}>UR</button>
+      {/* Sidebar */}
+      <div style={{
+        width: "220px",
+        background: "#111827",
+        color: "white",
+        padding: "20px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "10px"
+      }}>
+        <h2>Idraaktech</h2>
+
+        {menu.map((item) => (
+          <div
+            key={item.key}
+            onClick={() => setPage(item.key)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              padding: "10px",
+              cursor: "pointer",
+              borderRadius: "6px",
+              background: page === item.key ? "#2563eb" : "transparent"
+            }}
+          >
+            {item.icon}
+            {item.label}
+          </div>
+        ))}
+
+        {/* Language Switch */}
+        <div style={{ marginTop: "20px" }}>
+          <button onClick={() => setLang("en")}>EN</button>
+          <button onClick={() => setLang("ar")}>AR</button>
+          <button onClick={() => setLang("ur")}>UR</button>
+        </div>
       </div>
 
-      {/* Navbar */}
-      <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: "wrap" }}>
-
-        <button onClick={() => setPage("dashboard")}>
-          <FaHome style={{ marginRight: "5px" }} />
-          {t.dashboard}
-        </button>
-
-        <button onClick={() => setPage("projects")}>
-          <FaProjectDiagram style={{ marginRight: "5px" }} />
-          {t.projects}
-        </button>
-
-        <button onClick={() => setPage("ai")}>
-          <FaRobot style={{ marginRight: "5px" }} />
-          {t.ai}
-        </button>
-
-        <button onClick={() => setPage("about")}>
-          <FaInfoCircle style={{ marginRight: "5px" }} />
-          {t.about}
-        </button>
-
-        <button onClick={() => setPage("workshops")}>
-          <FaChalkboardTeacher style={{ marginRight: "5px" }} />
-          {t.workshops}
-        </button>
-
-        <button onClick={() => setPage("contact")}>
-          <FaEnvelope style={{ marginRight: "5px" }} />
-          {t.contact}
-        </button>
-
+      {/* Main Content */}
+      <div style={{ flex: 1, padding: "20px", background: "#f3f4f6" }}>
+        {renderPage()}
       </div>
-
-      {/* Content */}
-      {renderPage()}
 
     </div>
   );
