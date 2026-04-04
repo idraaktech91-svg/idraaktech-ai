@@ -13,6 +13,7 @@ const translations = {
     contact: "Contact",
     welcome: "Welcome",
     stats: "Platform Statistics",
+    myProjects: "My Projects",
   },
   ar: {
     dashboard: "الرئيسية",
@@ -23,6 +24,7 @@ const translations = {
     contact: "تواصل",
     welcome: "مرحباً",
     stats: "إحصائيات المنصة",
+    myProjects: "مشاريعي",
   },
   ur: {
     dashboard: "ڈیش بورڈ",
@@ -33,6 +35,7 @@ const translations = {
     contact: "رابطہ",
     welcome: "خوش آمدید",
     stats: "پلیٹ فارم کے اعداد و شمار",
+    myProjects: "میرے پروجیکٹس",
   }
 };
 
@@ -51,40 +54,54 @@ export default function App() {
     { key: "contact", icon: <FaEnvelope />, label: t.contact },
   ];
 
+  const projectsData = [
+    { title: "AI Chatbot", desc: "Smart chatbot using AI", status: "Active" },
+    { title: "E-learning Platform", desc: "Online courses system", status: "Completed" },
+    { title: "AI Image Generator", desc: "Generate images using AI", status: "In Progress" },
+    { title: "Automation Tool", desc: "Task automation system", status: "Active" },
+  ];
+
   const renderDashboard = () => (
     <div>
       <h2>{t.welcome} 👋</h2>
       <p>{t.stats}</p>
 
-      {/* Cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "15px", marginTop: "20px" }}>
-        
-        <div style={cardStyle}>
-          <h3>Projects</h3>
-          <p>12</p>
-        </div>
+        <div style={cardStyle}><h3>Projects</h3><p>12</p></div>
+        <div style={cardStyle}><h3>AI Tools</h3><p>5</p></div>
+        <div style={cardStyle}><h3>Workshops</h3><p>8</p></div>
+        <div style={cardStyle}><h3>Users</h3><p>120+</p></div>
+      </div>
+    </div>
+  );
 
-        <div style={cardStyle}>
-          <h3>AI Tools</h3>
-          <p>5</p>
-        </div>
+  const renderProjects = () => (
+    <div>
+      <h2>{t.myProjects}</h2>
 
-        <div style={cardStyle}>
-          <h3>Workshops</h3>
-          <p>8</p>
-        </div>
-
-        <div style={cardStyle}>
-          <h3>Users</h3>
-          <p>120+</p>
-        </div>
-
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "15px", marginTop: "20px" }}>
+        {projectsData.map((project, index) => (
+          <div key={index} style={cardStyle}>
+            <h3>{project.title}</h3>
+            <p>{project.desc}</p>
+            <span style={{
+              padding: "5px 10px",
+              borderRadius: "5px",
+              background: "#2563eb",
+              color: "white",
+              fontSize: "12px"
+            }}>
+              {project.status}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
 
   const renderPage = () => {
     if (page === "dashboard") return renderDashboard();
+    if (page === "projects") return renderProjects();
 
     return (
       <div style={{ background: "#1e1e2f", padding: "20px", borderRadius: "10px", color: "white" }}>
@@ -128,7 +145,6 @@ export default function App() {
           </div>
         ))}
 
-        {/* Language Switch */}
         <div style={{ marginTop: "20px" }}>
           <button onClick={() => setLang("en")}>EN</button>
           <button onClick={() => setLang("ar")}>AR</button>
@@ -151,6 +167,5 @@ const cardStyle = {
   background: "white",
   padding: "20px",
   borderRadius: "10px",
-  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-  textAlign: "center"
+  boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
 };
